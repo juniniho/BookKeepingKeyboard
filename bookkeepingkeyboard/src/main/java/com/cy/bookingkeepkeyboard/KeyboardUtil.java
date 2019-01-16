@@ -84,17 +84,21 @@ public class KeyboardUtil {
                         editable.delete(start - 1, start);
                     }
                 }
-            } else if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 隐藏键盘
-                hideKeyboard();
-                if (mOnCancelClick != null) {
-                    mOnCancelClick.onCancellClick();
-                }
-            } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 隐藏键盘
+            } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
                 hideKeyboard();
                 if (mOnOkClick != null) {
                     mOnOkClick.onOkClick();
                 }
-            } else {
+            }else if(primaryCode == 1001){
+                //今天
+
+            }else if(primaryCode == 1002){
+                //+
+
+            }else if(primaryCode == 1003){
+                //-;
+
+            }else {
                 editable.insert(start, Character.toString((char) primaryCode));
             }
         }
@@ -156,6 +160,9 @@ public class KeyboardUtil {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
+
+
+
     public interface OnOkClick {
         void onOkClick();
     }
@@ -165,14 +172,9 @@ public class KeyboardUtil {
     }
 
     public OnOkClick mOnOkClick = null;
-    public onCancelClick mOnCancelClick;
 
     public void setOnOkClick(OnOkClick onOkClick) {
         mOnOkClick = onOkClick;
-    }
-
-    public void setOnCancelClick(onCancelClick onCancelClick) {
-        mOnCancelClick = onCancelClick;
     }
 
 
@@ -195,4 +197,22 @@ public class KeyboardUtil {
             mKeyboardView.setVisibility(View.GONE);
         }
     }
+
+    private Keyboard.Key getKeyByKeyCode(int keyCode) {
+        if (null != mKeyboardNumber) {
+            List<Keyboard.Key> mKeys = mKeyboardNumber.getKeys();
+            for (int i = 0, size = mKeys.size(); i < size; i++) {
+                Keyboard.Key mKey = mKeys.get(i);
+
+                int codes[] = mKey.codes;
+
+                if (codes[0] == keyCode) {
+                    return mKey;
+                }
+            }
+        }
+
+        return null;
+    }
+
 }
