@@ -23,7 +23,7 @@ public class KeyboardUtil {
 
     private MyKeyBoardView mKeyboardView;
     private Keyboard mKeyboardNumber;//数字键盘
-    private TextView mEditText;
+    private TextView mTv;
 
 
     public KeyboardUtil(Activity activity) {
@@ -38,7 +38,7 @@ public class KeyboardUtil {
      * @param editText 需要绑定自定义键盘的edittext
      */
     public void attachTo(TextView editText) {
-        this.mEditText = editText;
+        this.mTv = editText;
         hideSoftInput(mActivity);
         showSoftKeyboard();
     }
@@ -73,16 +73,9 @@ public class KeyboardUtil {
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
-            CharSequence editable = mEditText.getText();
+            String text = mTv.getText().toString();
             if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-                if (editable != null) {
-                    if(editable.length() > 1) {
-                        mEditText.setText(editable.subSequence(0, editable.length() - 1));
-                    }else {
-                        //如果只剩1位，按删除置0
-                        mEditText.setText("0");
-                    }
-                }
+                backSpace();
             } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
                 hideKeyboard();
                 if (mOnOkClick != null) {
@@ -93,12 +86,19 @@ public class KeyboardUtil {
 
             }else if(primaryCode == 1002){
                 //+
+                if(text.endsWith("-")){
+                    backSpace();
+                }
+                append("+");
 
             }else if(primaryCode == 1003){
                 //-;
-
+                if(text.endsWith("+")){
+                    backSpace();
+                }
+                append("-");
             }else {
-                mEditText.setText(editable+Character.toString((char) primaryCode));
+                append(Character.toString((char) primaryCode));
             }
         }
 
@@ -128,6 +128,25 @@ public class KeyboardUtil {
         }
     };
 
+    /**
+     * 退格
+     */
+    private void backSpace(){
+        String text = mTv.getText().toString();
+        if(text.length() > 1) {
+            mTv.setText(text.substring(0, text.length() - 1));
+        }else {
+            //如果只剩1位，按删除置0
+            mTv.setText("0");
+        }
+
+    }
+
+    private void append(String str){
+        StringBuilder sb = new StringBuilder(mTv.getText().toString());
+        sb.append(str);
+        mTv.setText(sb.toString());
+    }
 
     /**
      * 隐藏系统键盘
