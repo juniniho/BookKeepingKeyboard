@@ -5,17 +5,14 @@ import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * 自定义键盘
@@ -26,7 +23,7 @@ public class KeyboardUtil {
 
     private MyKeyBoardView mKeyboardView;
     private Keyboard mKeyboardNumber;//数字键盘
-    private EditText mEditText;
+    private TextView mEditText;
 
 
     public KeyboardUtil(Activity activity) {
@@ -40,9 +37,9 @@ public class KeyboardUtil {
      *
      * @param editText 需要绑定自定义键盘的edittext
      */
-    public void attachTo(EditText editText) {
+    public void attachTo(TextView editText) {
         this.mEditText = editText;
-        hideSystemSofeKeyboard(mActivity.getApplicationContext(), mEditText);
+        hideSoftInput(mActivity);
         showSoftKeyboard();
     }
 
@@ -76,12 +73,14 @@ public class KeyboardUtil {
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
-            Editable editable = mEditText.getText();
-            int start = mEditText.getSelectionStart();
+            CharSequence editable = mEditText.getText();
             if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-                if (editable != null && editable.length() > 0) {
-                    if (start > 0) {
-                        editable.delete(start - 1, start);
+                if (editable != null) {
+                    if(editable.length() > 1) {
+                        mEditText.setText(editable.subSequence(0, editable.length() - 1));
+                    }else {
+                        //如果只剩1位，按删除置0
+                        mEditText.setText("0");
                     }
                 }
             } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
@@ -99,7 +98,7 @@ public class KeyboardUtil {
                 //-;
 
             }else {
-                editable.insert(start, Character.toString((char) primaryCode));
+                mEditText.setText(editable+Character.toString((char) primaryCode));
             }
         }
 
@@ -160,6 +159,16 @@ public class KeyboardUtil {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
+    public static void hideSoftInput(Activity activity) {
+
+        if (activity == null) return;
+
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
+    }
+
 
 
 
@@ -167,9 +176,6 @@ public class KeyboardUtil {
         void onOkClick();
     }
 
-    public interface onCancelClick {
-        void onCancellClick();
-    }
 
     public OnOkClick mOnOkClick = null;
 
