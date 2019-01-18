@@ -15,8 +15,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * 自定义键盘
- * Created by xuejinwei on 16/3/5.
+ * 键盘辅助类
  */
 public class KeyboardUtil {
     private Activity mActivity;
@@ -50,6 +49,9 @@ public class KeyboardUtil {
         if (mKeyboardView == null) {
             mKeyboardView = (MyKeyBoardView) mActivity.findViewById(R.id.keyboard_view);
         }
+        if(mKeyboardView == null){
+            throw new IllegalArgumentException("使用bookkeepingkeyboard必须在activity include include_keyboardview布局");
+        }
 
         mKeyboardView.setKeyboard(mKeyboardNumber);
 
@@ -63,7 +65,6 @@ public class KeyboardUtil {
     private KeyboardView.OnKeyboardActionListener mOnKeyboardActionListener = new KeyboardView.OnKeyboardActionListener() {
         @Override
         public void onPress(int primaryCode) {
-
         }
 
         @Override
@@ -73,9 +74,21 @@ public class KeyboardUtil {
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
+            Keyboard.Key keyConfirm = getKeyByKeyCode(Keyboard.KEYCODE_DONE);
             String text = mTv.getText().toString();
-            if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-                backSpace();
+            if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退按钮
+                if(text.equals("0.00")){
+                    //默认值不回退，0.00只会在初始化出现
+                    return;
+                }
+
+                if(text.length() == 1) {
+                    //如果只剩1位，按删除置0
+                    mTv.setText("0");
+                }else {
+
+                    backSpace();
+                }
             } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
                 hideKeyboard();
                 if (mOnOkClick != null) {
@@ -89,6 +102,9 @@ public class KeyboardUtil {
                 if(text.endsWith("-")){
                     backSpace();
                 }
+                if(text.endsWith("+")){
+                    return;
+                }
                 append("+");
 
             }else if(primaryCode == 1003){
@@ -96,9 +112,51 @@ public class KeyboardUtil {
                 if(text.endsWith("+")){
                     backSpace();
                 }
+                if(text.endsWith("-")){
+                    return;
+                }
                 append("-");
             }else {
-                append(Character.toString((char) primaryCode));
+                String inputChar = Character.toString((char) primaryCode);
+                if(text.equals("0") || text.equals("0.00")){
+                    //如果是默认值，直接替换
+                    mTv.setText(inputChar);
+                    return;
+                }
+
+                if(".".equals(inputChar) && text.endsWith(".")){
+                    //只能输入一个点
+                    return;
+                }
+
+                int lastPointPos = text.lastIndexOf(".");
+                if(lastPointPos >=0 && text.length() - lastPointPos == 3){
+                    //已经输入两位小数，不允许输入数字和点
+                    return;
+                }
+                if(text.endsWith("+0") || text.endsWith("-0") && !inputChar.equals(".")){
+                    backSpace();
+                }
+                if(text.length() >= 8){
+                    String endEight = text.substring(text.length()-8,text.length());
+                    if(endEight.matches("^[0-9]*$") && !inputChar.equals(".")){
+                        //已经有了8位数字，只允许输入点
+                        return;
+
+                    }
+                }
+                if(text.endsWith("+") || text.endsWith("-")){
+                    if(inputChar.equals(".")){
+                        append("0");
+                    }
+
+                    keyConfirm.label = "=";
+
+                }
+
+                append(inputChar);
+
+
             }
         }
 
@@ -133,11 +191,8 @@ public class KeyboardUtil {
      */
     private void backSpace(){
         String text = mTv.getText().toString();
-        if(text.length() > 1) {
+        if(text.length() > 0) {
             mTv.setText(text.substring(0, text.length() - 1));
-        }else {
-            //如果只剩1位，按删除置0
-            mTv.setText("0");
         }
 
     }
