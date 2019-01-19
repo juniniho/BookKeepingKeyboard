@@ -81,12 +81,10 @@ public class KeyboardUtil {
                     //默认值不回退，0.00只会在初始化出现
                     return;
                 }
-
                 if(text.length() == 1) {
-                    //如果只剩1位，按删除置0
+                    //如果只剩1位，置0
                     mTv.setText("0");
                 }else {
-
                     backSpace();
                 }
             } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
@@ -117,6 +115,7 @@ public class KeyboardUtil {
                 }
                 append("-");
             }else {
+                //数字和点
                 String inputChar = Character.toString((char) primaryCode);
                 if(text.equals("0") || text.equals("0.00")){
                     //如果是默认值，直接替换
@@ -129,21 +128,17 @@ public class KeyboardUtil {
                     return;
                 }
 
-                int lastPointPos = text.lastIndexOf(".");
-                if(lastPointPos >=0 && text.length() - lastPointPos == 3){
+                if(text.matches(".*\\.[0-9]{2}")){
                     //已经输入两位小数，不允许输入数字和点
                     return;
                 }
-                if(text.endsWith("+0") || text.endsWith("-0") && !inputChar.equals(".")){
+                if(text.matches(".*[\\+-]0") && !inputChar.equals(".")){
+                    //+0或者-0结尾不是点号删掉多余的0
                     backSpace();
                 }
-                if(text.length() >= 8){
-                    String endEight = text.substring(text.length()-8,text.length());
-                    if(endEight.matches("^[0-9]*$") && !inputChar.equals(".")){
-                        //已经有了8位数字，只允许输入点
-                        return;
-
-                    }
+                if(text.matches(".*[0-9]{8}") && !inputChar.equals(".")){
+                    //已经有了8位数字，只允许输入点
+                    return;
                 }
                 if(text.endsWith("+") || text.endsWith("-")){
                     if(inputChar.equals(".")){
