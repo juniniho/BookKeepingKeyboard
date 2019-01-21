@@ -94,9 +94,14 @@ public class KeyboardUtil {
                     keyConfirm.label = "完成";
                 }
             } else if (primaryCode == Keyboard.KEYCODE_DONE) {//完成/=
-                if(isExpression()){
+                if(keyConfirm.label.equals("=")){
                     calculate(keyConfirm);
                 }else {
+                    if(text.matches(".*[\\+-\\.]")){
+                        //去除末尾多余的+-.
+                        backSpace();
+                    }
+
                     hideKeyboard();
                     if (mOnOkClick != null) {
                         mOnOkClick.onOkClick();
