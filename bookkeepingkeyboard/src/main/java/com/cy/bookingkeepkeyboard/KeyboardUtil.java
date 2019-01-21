@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -87,16 +88,30 @@ public class KeyboardUtil {
                 }else {
                     backSpace();
                 }
-            } else if (primaryCode == Keyboard.KEYCODE_DONE) {// 确定按钮,隐藏键盘
-                hideKeyboard();
-                if (mOnOkClick != null) {
-                    mOnOkClick.onOkClick();
+                if(isExpression()){
+                    keyConfirm.label = "=";
+                }else {
+                    keyConfirm.label = "完成";
                 }
+            } else if (primaryCode == Keyboard.KEYCODE_DONE) {//完成/=
+                if(isExpression()){
+                    calculate(keyConfirm);
+                }else {
+                    hideKeyboard();
+                    if (mOnOkClick != null) {
+                        mOnOkClick.onOkClick();
+                    }
+                }
+
             }else if(primaryCode == 1001){
                 //今天
 
             }else if(primaryCode == 1002){
                 //+
+                if(isExpression()){
+                    calculate(keyConfirm);
+                }
+
                 if(text.endsWith("-")){
                     backSpace();
                 }
@@ -107,6 +122,10 @@ public class KeyboardUtil {
 
             }else if(primaryCode == 1003){
                 //-;
+                if(isExpression()){
+                    calculate(keyConfirm);
+                }
+
                 if(text.endsWith("+")){
                     backSpace();
                 }
@@ -137,22 +156,22 @@ public class KeyboardUtil {
                     backSpace();
                 }
                 if(text.matches(".*[0-9]{8}") && !inputChar.equals(".")){
-                    //已经有了8位数字，只允许输入点
+                    //已经有了8位数字，只允许输入点(最高8位数)
                     return;
                 }
                 if(text.endsWith("+") || text.endsWith("-")){
-                    if(inputChar.equals(".")){
+                    if(inputChar.equals(".")) {
                         append("0");
                     }
-
                     keyConfirm.label = "=";
-
                 }
 
                 append(inputChar);
 
 
             }
+
+
         }
 
         @Override
@@ -196,6 +215,44 @@ public class KeyboardUtil {
         StringBuilder sb = new StringBuilder(mTv.getText().toString());
         sb.append(str);
         mTv.setText(sb.toString());
+    }
+
+    /**
+     * 是否是运算表达式
+     * @return
+     */
+    private boolean isExpression(){
+        String text = mTv.getText().toString();
+        return text.matches("-*[\\d\\.]+[\\+-][\\d\\.]+");
+    }
+
+    private void calculate(Keyboard.Key keyConfirm){
+        String text = mTv.getText().toString();
+        if(text.endsWith(".")){
+            //忽略末尾的点
+            text = text.substring(0,text.length() - 1);
+        }
+        String s1,s2;
+        boolean isAdd;
+        int pos = text.lastIndexOf("+");
+        if(pos > 0){
+            isAdd = true;
+        }else {
+            isAdd = false;
+            pos = text.lastIndexOf("-");
+        }
+        s1 = text.substring(0,pos);
+        s2 = text.substring(pos + 1);
+        double d1 = Double.parseDouble(s1);
+        double d2 = Double.parseDouble(s2);
+        double res;
+        if(isAdd){
+            res = d1 + d2;
+        }else {
+            res = d1 - d2;
+        }
+        mTv.setText(new DecimalFormat("#.##").format(res));
+        keyConfirm.label = "完成";
     }
 
     /**
@@ -250,12 +307,6 @@ public class KeyboardUtil {
 
     public void setOnOkClick(OnOkClick onOkClick) {
         mOnOkClick = onOkClick;
-    }
-
-
-    private boolean isNumber(String str) {
-        String wordstr = "0123456789";
-        return wordstr.contains(str);
     }
 
 
