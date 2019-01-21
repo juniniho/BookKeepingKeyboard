@@ -1,4 +1,4 @@
-package com.cy.bookingkeepkeyboard;
+package com.cy.bookkeepingkeyboard;
 
 import org.junit.Test;
 
