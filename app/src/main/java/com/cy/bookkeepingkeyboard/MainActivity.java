@@ -14,12 +14,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final TextView edt2 = findViewById(R.id.edt2);
-        final KeyboardUtil keyboardUtil = new KeyboardUtil(this);
+        final BookKeyboardHelper bookKeyboardHelper = new BookKeyboardHelper(this);
 
         edt2.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                keyboardUtil.attachTo(edt2);
+                bookKeyboardHelper.attachTo(edt2);
                 return false;
             }
         });

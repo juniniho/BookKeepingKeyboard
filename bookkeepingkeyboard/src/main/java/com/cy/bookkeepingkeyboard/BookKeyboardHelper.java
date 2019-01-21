@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 键盘辅助类
  */
-public class KeyboardUtil {
+public class BookKeyboardHelper {
     private Activity mActivity;
 
     private MyKeyBoardView mKeyboardView;
@@ -26,7 +26,7 @@ public class KeyboardUtil {
     private TextView mTv;
 
 
-    public KeyboardUtil(Activity activity) {
+    public BookKeyboardHelper(Activity activity) {
         this.mActivity = activity;
         mKeyboardNumber = new Keyboard(mActivity, R.xml.keyboard_number);
         mKeyboardView = mActivity.findViewById(R.id.keyboard_view);
