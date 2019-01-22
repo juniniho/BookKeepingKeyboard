@@ -110,6 +110,10 @@ public class BookKeyboardHelper {
 
             }else if(primaryCode == 1001){
                 //今天
+                Keyboard.Key keyDate = getKeyByKeyCode(1001);
+                if(mOnDateClick != null) {
+                    mOnDateClick.onDateClick(keyDate.label.toString());
+                }
 
             }else if(primaryCode == 1002){
                 //+
@@ -306,12 +310,19 @@ public class BookKeyboardHelper {
     public interface OnOkClick {
         void onOkClick();
     }
-
-
     public OnOkClick mOnOkClick = null;
 
     public void setOnOkClick(OnOkClick onOkClick) {
         mOnOkClick = onOkClick;
+    }
+
+    public interface OnDateClick {
+        void onDateClick(String str);
+    }
+    private OnDateClick mOnDateClick;
+
+    public void setOnDateClick(OnDateClick onDateClick){
+        this.mOnDateClick = onDateClick;
     }
 
 
@@ -345,5 +356,12 @@ public class BookKeyboardHelper {
 
         return null;
     }
+
+    public void setDate(String dateStr){
+        Keyboard.Key key = getKeyByKeyCode(1001);
+        key.label = dateStr;
+        mKeyboardView.setKeyboard(mKeyboardNumber);
+    }
+
 
 }
