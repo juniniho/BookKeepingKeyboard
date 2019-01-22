@@ -1,4 +1,4 @@
-package com.cy.bookkeepingkeyboard;
+package com.cy.bkbdemo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

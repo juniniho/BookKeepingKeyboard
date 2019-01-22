@@ -1,4 +1,4 @@
-package com.cy.bookkeepingkeyboard;
+package com.cy.bkbdemo;
 
 import org.junit.Test;
 
