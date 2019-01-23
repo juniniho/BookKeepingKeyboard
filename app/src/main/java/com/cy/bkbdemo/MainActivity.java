@@ -46,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
                 timeSelector.show();
             }
         });
+        bookKeyboardHelper.setOnOkClick(new BookKeyboardHelper.OnOkClick() {
+            @Override
+            public void onOkClick() {
+                bookKeyboardHelper.hideKeyboard();
+            }
+        });
 
         edt2.setOnTouchListener(new View.OnTouchListener() {
             @Override

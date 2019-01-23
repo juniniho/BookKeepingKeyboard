@@ -102,7 +102,6 @@ public class BookKeyboardHelper {
                         backSpace();
                     }
 
-                    hideKeyboard();
                     if (mOnOkClick != null) {
                         mOnOkClick.onOkClick();
                     }
@@ -164,8 +163,8 @@ public class BookKeyboardHelper {
                     //+0或者-0结尾不是点号删掉多余的0
                     backSpace();
                 }
-                if(text.matches(".*[0-9]{8}") && !inputChar.equals(".")){
-                    //已经有了8位数字，只允许输入点(最高8位数)
+                if(text.matches(".*[0-9]{5}") && !inputChar.equals(".")){
+                    //限制最高几位数
                     return;
                 }
                 if(text.endsWith("+") || text.endsWith("-")){
