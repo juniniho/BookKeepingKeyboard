@@ -333,11 +333,13 @@ public class BookKeyboardHelper {
         }
     }
 
-    public void hideKeyboard() {
+    public boolean hideKeyboard() {
         int visibility = mKeyboardView.getVisibility();
         if (visibility == View.VISIBLE) {
             mKeyboardView.setVisibility(View.GONE);
+            return true;
         }
+        return false;
     }
 
     private Keyboard.Key getKeyByKeyCode(int keyCode) {

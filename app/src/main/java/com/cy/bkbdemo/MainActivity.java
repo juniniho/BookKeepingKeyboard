@@ -55,7 +55,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    public void onBackPressed() {
+        if(!bookKeyboardHelper.hideKeyboard()) {
+            super.onBackPressed();
+        }
 
     }
 }
