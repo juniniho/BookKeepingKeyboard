@@ -78,10 +78,6 @@ public class BookKeyboardHelper {
             Keyboard.Key keyConfirm = getKeyByKeyCode(Keyboard.KEYCODE_DONE);
             String text = mTv.getText().toString();
             if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退按钮
-                if(text.equals("0.00")){
-                    //默认值不回退，0.00只会在初始化出现
-                    return;
-                }
                 if(text.length() == 1) {
                     //如果只剩1位，置0
                     mTv.setText("0");
@@ -144,7 +140,7 @@ public class BookKeyboardHelper {
             }else {
                 //数字和点
                 String inputChar = Character.toString((char) primaryCode);
-                if((text.equals("0") || text.equals("0.00")) && !inputChar.equals(".")){
+                if((text.equals("0")) && !inputChar.equals(".")){
                     //如果是默认值，直接替换
                     mTv.setText(inputChar);
                     return;
