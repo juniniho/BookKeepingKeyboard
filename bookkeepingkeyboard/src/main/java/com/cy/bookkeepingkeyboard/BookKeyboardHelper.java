@@ -144,7 +144,7 @@ public class BookKeyboardHelper {
             }else {
                 //数字和点
                 String inputChar = Character.toString((char) primaryCode);
-                if(text.equals("0") || text.equals("0.00")){
+                if((text.equals("0") || text.equals("0.00")) && !inputChar.equals(".")){
                     //如果是默认值，直接替换
                     mTv.setText(inputChar);
                     return;
