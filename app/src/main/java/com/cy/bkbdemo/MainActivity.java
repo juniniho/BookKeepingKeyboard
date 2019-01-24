@@ -2,7 +2,6 @@ package com.cy.bkbdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 import com.cy.bookkeepingkeyboard.BookKeyboardHelper;
 
 import org.feezu.liuli.timeselector.TimeSelector;
+import org.feezu.liuli.timeselector.Utils.DateUtil;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
                 TimeSelector timeSelector = new TimeSelector(MainActivity.this, new TimeSelector.ResultHandler() {
                     @Override
                     public void handle(String time) {
-
-                        bookKeyboardHelper.setDate(time.substring(0,10));
+                        Date date = DateUtil.parse(time,"yyyy-MM-dd HH:mm");
+                        bookKeyboardHelper.setDate(date);
 
                     }
                 }, "2017-06-08 00:00", "2125-12-12 00:00");
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         });
         bookKeyboardHelper.setOnOkClick(new BookKeyboardHelper.OnOkClick() {
             @Override
-            public void onOkClick() {
+            public void onOkClick(String money,String date,long timeStamp) {
                 bookKeyboardHelper.hideKeyboard();
             }
         });

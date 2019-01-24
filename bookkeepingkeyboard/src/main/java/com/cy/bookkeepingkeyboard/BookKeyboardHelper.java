@@ -6,6 +6,7 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
 import android.text.InputType;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,12 +28,13 @@ public class BookKeyboardHelper {
     private MyKeyBoardView mKeyboardView;
     private Keyboard mKeyboardNumber;//数字键盘
     private TextView mTv;
-
+    private Date mDate;
 
     public BookKeyboardHelper(Activity activity) {
         this.mActivity = activity;
         mKeyboardNumber = new Keyboard(mActivity, R.xml.keyboard_number);
         mKeyboardView = mActivity.findViewById(R.id.keyboard_view);
+        mDate = new Date();
     }
 
     /**
@@ -99,7 +104,16 @@ public class BookKeyboardHelper {
                     }
 
                     if (mOnOkClick != null) {
-                        mOnOkClick.onOkClick();
+                        SimpleDateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String date = outFormat.format(mDate);
+                        Calendar dateCalendar = Calendar.getInstance();
+                        dateCalendar.setTime(mDate);
+                        Calendar timeCalendar = Calendar.getInstance();
+                        timeCalendar.set(Calendar.YEAR,dateCalendar.get(Calendar.YEAR));
+                        timeCalendar.set(Calendar.MONTH,dateCalendar.get(Calendar.MONTH));
+                        timeCalendar.set(Calendar.DAY_OF_MONTH,dateCalendar.get(Calendar.DAY_OF_MONTH));
+
+                        mOnOkClick.onOkClick(mTv.getText().toString(),date,timeCalendar.getTimeInMillis());
                     }
                 }
 
@@ -303,7 +317,7 @@ public class BookKeyboardHelper {
 
 
     public interface OnOkClick {
-        void onOkClick();
+        void onOkClick(String money,String date,long timeStamp);
     }
     public OnOkClick mOnOkClick = null;
 
@@ -354,9 +368,15 @@ public class BookKeyboardHelper {
         return null;
     }
 
-    public void setDate(String dateStr){
+    public void setDate(Date date){
+        this.mDate = date;
         Keyboard.Key key = getKeyByKeyCode(1001);
-        key.label = dateStr;
+        if(DateUtils.isToday(date.getTime())){
+            key.label = "今天";
+        }else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            key.label = sdf.format(date);
+        }
         mKeyboardView.setKeyboard(mKeyboardNumber);
     }
 
