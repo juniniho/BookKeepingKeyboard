@@ -105,6 +105,7 @@ public class BookKeyboardHelper {
 
                     if (mOnOkClick != null) {
                         SimpleDateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        //使用选择的日期和当前时分秒拼接为时间戳作为排序依据
                         String date = outFormat.format(mDate);
                         Calendar dateCalendar = Calendar.getInstance();
                         dateCalendar.setTime(mDate);
