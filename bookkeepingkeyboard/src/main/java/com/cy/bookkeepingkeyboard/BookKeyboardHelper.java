@@ -10,6 +10,7 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
@@ -29,10 +30,13 @@ public class BookKeyboardHelper {
     private Keyboard mKeyboardNumber;//数字键盘
     private TextView mTv;
     private Date mDate;
+    private LinearLayout ll_bookkeepingkeyboard;
+    private TextView txt_date;
 
     public BookKeyboardHelper(Activity activity) {
         this.mActivity = activity;
         mKeyboardNumber = new Keyboard(mActivity, R.xml.keyboard_number);
+        ll_bookkeepingkeyboard = mActivity.findViewById(R.id.ll_bookkeepingkeyboard);
         mKeyboardView = mActivity.findViewById(R.id.keyboard_view);
         mDate = new Date();
     }
@@ -55,6 +59,16 @@ public class BookKeyboardHelper {
         if (mKeyboardView == null) {
             mKeyboardView = (MyKeyBoardView) mActivity.findViewById(R.id.keyboard_view);
         }
+        txt_date = mActivity.findViewById(R.id.txt_date);
+        txt_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnDateClick != null) {
+                    mOnDateClick.onDateClick(txt_date.getText().toString());
+                }
+            }
+        });
+
         if(mKeyboardView == null){
             throw new IllegalArgumentException("使用bookkeepingkeyboard必须在activity include include_keyboardview布局");
         }
@@ -63,7 +77,7 @@ public class BookKeyboardHelper {
 
         mKeyboardView.setEnabled(true);
         mKeyboardView.setPreviewEnabled(false);
-        mKeyboardView.setVisibility(View.VISIBLE);
+        ll_bookkeepingkeyboard.setVisibility(View.VISIBLE);
         mKeyboardView.setOnKeyboardActionListener(mOnKeyboardActionListener);
 
     }
@@ -116,13 +130,6 @@ public class BookKeyboardHelper {
 
                         mOnOkClick.onOkClick(mTv.getText().toString(),date,timeCalendar.getTimeInMillis());
                     }
-                }
-
-            }else if(primaryCode == 1001){
-                //今天
-                Keyboard.Key keyDate = getKeyByKeyCode(1001);
-                if(mOnDateClick != null) {
-                    mOnDateClick.onDateClick(keyDate.label.toString());
                 }
 
             }else if(primaryCode == 1002){
@@ -340,16 +347,16 @@ public class BookKeyboardHelper {
 
 
     public void showKeyboard() {
-        int visibility = mKeyboardView.getVisibility();
+        int visibility = ll_bookkeepingkeyboard.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
-            mKeyboardView.setVisibility(View.VISIBLE);
+            ll_bookkeepingkeyboard.setVisibility(View.VISIBLE);
         }
     }
 
     public boolean hideKeyboard() {
-        int visibility = mKeyboardView.getVisibility();
+        int visibility = ll_bookkeepingkeyboard.getVisibility();
         if (visibility == View.VISIBLE) {
-            mKeyboardView.setVisibility(View.GONE);
+            ll_bookkeepingkeyboard.setVisibility(View.GONE);
             return true;
         }
         return false;
@@ -374,14 +381,12 @@ public class BookKeyboardHelper {
 
     public void setDate(Date date){
         this.mDate = date;
-        Keyboard.Key key = getKeyByKeyCode(1001);
         if(DateUtils.isToday(date.getTime())){
-            key.label = "今天";
+            txt_date.setText("今天");
         }else {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            key.label = sdf.format(date);
+            txt_date.setText(sdf.format(date));
         }
-        mKeyboardView.setKeyboard(mKeyboardNumber);
     }
 
 
