@@ -152,7 +152,10 @@ public class BookKeyboardHelper {
                     return;
                 }
                 append("-");
-            }else {
+            }else if(primaryCode == 1004){
+                mTv.setText("0");
+
+            } else{
                 //数字和点
                 String inputChar = Character.toString((char) primaryCode);
                 if((text.equals("0")) && !inputChar.equals(".")){

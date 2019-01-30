@@ -103,7 +103,7 @@ public class MyKeyBoardView extends KeyboardView {
                     e.printStackTrace();
                 }
                 paint.setTextSize(keyTextSize);
-                paint.setTypeface(Typeface.DEFAULT);
+                paint.setTypeface(Typeface.DEFAULT_BOLD);
             }
 
             paint.getTextBounds(key.label.toString(), 0, key.label.toString()
