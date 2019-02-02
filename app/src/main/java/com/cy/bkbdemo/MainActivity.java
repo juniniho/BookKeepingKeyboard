@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final TextView edt2 = findViewById(R.id.edt2);
-        bookKeyboardHelper = new BookKeyboardHelper(this);
+        View ll_bookkeepingkeyboard = findViewById(R.id.ll_bookkeepingkeyboard);
+        bookKeyboardHelper = new BookKeyboardHelper(this,ll_bookkeepingkeyboard);
         bookKeyboardHelper.setOnDateClick(new BookKeyboardHelper.OnDateClick() {
             @Override
             public void onDateClick(String str) {

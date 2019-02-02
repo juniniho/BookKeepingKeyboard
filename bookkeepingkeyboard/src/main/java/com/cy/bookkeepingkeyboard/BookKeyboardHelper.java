@@ -24,7 +24,8 @@ import java.util.List;
  * 键盘辅助类
  */
 public class BookKeyboardHelper {
-    private Activity mActivity;
+    private Context mContext;
+    private View rootView;
 
     private MyKeyBoardView mKeyboardView;
     private Keyboard mKeyboardNumber;//数字键盘
@@ -33,12 +34,16 @@ public class BookKeyboardHelper {
     private LinearLayout ll_bookkeepingkeyboard;
     private TextView txt_date;
 
-    public BookKeyboardHelper(Activity activity) {
-        this.mActivity = activity;
-        mKeyboardNumber = new Keyboard(mActivity, R.xml.keyboard_number);
-        ll_bookkeepingkeyboard = mActivity.findViewById(R.id.ll_bookkeepingkeyboard);
-        mKeyboardView = mActivity.findViewById(R.id.keyboard_view);
+    private static final String DEFAULT_VALUE = "0.00";
+
+    public BookKeyboardHelper(Context context,View rootView) {
+        this.mContext = context;
+        this.rootView = rootView;
+        mKeyboardNumber = new Keyboard(mContext, R.xml.keyboard_number);
+        ll_bookkeepingkeyboard = rootView.findViewById(R.id.ll_bookkeepingkeyboard);
+        mKeyboardView = rootView.findViewById(R.id.keyboard_view);
         mDate = new Date();
+        txt_date = rootView.findViewById(R.id.txt_date);
     }
 
     /**
@@ -48,18 +53,17 @@ public class BookKeyboardHelper {
      */
     public void attachTo(TextView editText) {
         this.mTv = editText;
-        hideSoftInput(mActivity);
         showSoftKeyboard();
     }
 
     public void showSoftKeyboard() {
         if (mKeyboardNumber == null) {
-            mKeyboardNumber = new Keyboard(mActivity, R.xml.keyboard_number);
+            mKeyboardNumber = new Keyboard(mContext, R.xml.keyboard_number);
         }
         if (mKeyboardView == null) {
-            mKeyboardView = (MyKeyBoardView) mActivity.findViewById(R.id.keyboard_view);
+            mKeyboardView = rootView.findViewById(R.id.keyboard_view);
         }
-        txt_date = mActivity.findViewById(R.id.txt_date);
+
         txt_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,9 +101,12 @@ public class BookKeyboardHelper {
             Keyboard.Key keyConfirm = getKeyByKeyCode(Keyboard.KEYCODE_DONE);
             String text = mTv.getText().toString();
             if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退按钮
+                if(text.equals(DEFAULT_VALUE)){
+                    return;
+                }
                 if(text.length() == 1) {
                     //如果只剩1位，置0
-                    mTv.setText("0");
+                    mTv.setText(DEFAULT_VALUE);
                 }else {
                     backSpace();
                 }
@@ -165,13 +172,17 @@ public class BookKeyboardHelper {
             } else{
                 //数字和点
                 String inputChar = Character.toString((char) primaryCode);
-                if((text.equals("0")) && !inputChar.equals(".")){
+                if((text.equals("0") || text.equals(DEFAULT_VALUE))){
                     //如果是默认值，直接替换
-                    mTv.setText(inputChar);
+                    if(!inputChar.equals(".")) {
+                        mTv.setText(inputChar);
+                    }else {
+                        mTv.setText("0.");
+                    }
                     return;
                 }
 
-                if(".".equals(inputChar) && text.endsWith(".")){
+                if(".".equals(inputChar) && (text.endsWith(".") || text.matches(".*\\.[0-9]{1}"))){
                     //只能输入一个点
                     return;
                 }
