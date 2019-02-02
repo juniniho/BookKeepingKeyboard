@@ -33,6 +33,7 @@ public class BookKeyboardHelper {
     private Date mDate;
     private LinearLayout ll_bookkeepingkeyboard;
     private TextView txt_date;
+    public TextView txt_remark;
 
     private static final String DEFAULT_VALUE = "0.00";
 
@@ -44,6 +45,7 @@ public class BookKeyboardHelper {
         mKeyboardView = rootView.findViewById(R.id.keyboard_view);
         mDate = new Date();
         txt_date = rootView.findViewById(R.id.txt_date);
+        txt_remark = rootView.findViewById(R.id.txt_remark);
     }
 
     /**
