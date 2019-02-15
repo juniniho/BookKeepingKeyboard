@@ -33,7 +33,10 @@ public class BookKeyboardHelper {
     private Date mDate;
     private LinearLayout ll_bookkeepingkeyboard;
     private TextView txt_date;
-    public TextView txt_remark;
+    private TextView txt_remark;
+    public LinearLayout ll_remark;
+
+    private TextView txt_badge;
 
     private static final String DEFAULT_VALUE = "0.00";
 
@@ -46,6 +49,8 @@ public class BookKeyboardHelper {
         mDate = new Date();
         txt_date = rootView.findViewById(R.id.txt_date);
         txt_remark = rootView.findViewById(R.id.txt_remark);
+        ll_remark = rootView.findViewById(R.id.ll_remark);
+        txt_badge = rootView.findViewById(R.id.txt_badge);
     }
 
     /**
@@ -55,10 +60,10 @@ public class BookKeyboardHelper {
      */
     public void attachTo(TextView editText) {
         this.mTv = editText;
-        showSoftKeyboard();
+        initSoftKeyboard();
     }
 
-    public void showSoftKeyboard() {
+    private void initSoftKeyboard() {
         if (mKeyboardNumber == null) {
             mKeyboardNumber = new Keyboard(mContext, R.xml.keyboard_number);
         }
@@ -83,7 +88,6 @@ public class BookKeyboardHelper {
 
         mKeyboardView.setEnabled(true);
         mKeyboardView.setPreviewEnabled(false);
-        ll_bookkeepingkeyboard.setVisibility(View.VISIBLE);
         mKeyboardView.setOnKeyboardActionListener(mOnKeyboardActionListener);
 
     }
@@ -400,6 +404,19 @@ public class BookKeyboardHelper {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             txt_date.setText(sdf.format(date));
         }
+    }
+
+    public void setImgBadge(int num){
+        txt_badge.setText(String.valueOf(num));
+        if(num <= 0){
+            txt_badge.setVisibility(View.GONE);
+        }else {
+            txt_badge.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setRemark(String remark){
+        txt_remark.setText(remark);
     }
 
 

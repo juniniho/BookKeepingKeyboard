@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 bookKeyboardHelper.attachTo(edt2);
+                bookKeyboardHelper.showKeyboard();
                 return false;
             }
         });

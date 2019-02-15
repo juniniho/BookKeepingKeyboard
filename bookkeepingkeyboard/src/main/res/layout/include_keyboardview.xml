@@ -26,29 +26,58 @@
             android:layout_marginLeft="15dp"
             />
 
-        <TextView
-            android:id="@+id/txt_remark"
+        <LinearLayout
+            android:id="@+id/ll_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="添加备注"
-            android:textSize="15sp"
-            android:textColor="#333333"
-            android:maxEms="5"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:orientation="horizontal"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            />
-        <ImageView
-            android:id="@+id/img_remark"
-            android:layout_width="18dp"
-            android:layout_height="15dp"
-            android:src="@drawable/bkk_icon_add_remark"
-            android:layout_toLeftOf="@+id/txt_remark"
-            android:layout_marginRight="8dp"
-            android:layout_centerVertical="true"
-            />
+            android:layout_marginRight="15dp">
+            <FrameLayout
+                android:id="@+id/fl_img_remark"
+                android:layout_width="26dp"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@+id/txt_remark"
+                android:layout_marginRight="1dp"
+                android:layout_centerVertical="true">
+                <ImageView
+                    android:id="@+id/img_remark"
+                    android:layout_width="18dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/bkk_icon_add_remark"
+                    android:layout_gravity="center|start"
+                    />
+                <TextView
+                    android:id="@+id/txt_badge"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:text="5"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:background="@drawable/shape_bg_badge"
+                    android:layout_gravity="top|end"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/txt_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="添加备注"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:maxEms="5"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+
+
+
     </RelativeLayout>
 
     <com.cy.bookkeepingkeyboard.MyKeyBoardView
