@@ -419,5 +419,10 @@ public class BookKeyboardHelper {
         txt_remark.setText(remark);
     }
 
+    public void destroy(){
+        mTv = null;
+        rootView = null;
+    }
+
 
 }
